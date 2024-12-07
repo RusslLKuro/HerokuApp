@@ -8,6 +8,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
 import java.time.Duration;
 
 public class InputsTest {
@@ -21,24 +23,25 @@ public class InputsTest {
 //        options.addArguments("headless");
 //        options.addArguments("incognito");
 //        options.addArguments("disable-notification");
-        driver =  new ChromeDriver();
+        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @Test
     public void checkInputs() {
-
+        SoftAssert softAssert = new SoftAssert();
         driver.get("http://the-internet.herokuapp.com/inputs");
         driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).sendKeys("23456");
         String inputField = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).getAttribute("value");
-        Assert.assertEquals(inputField, "23456");
+        softAssert.assertEquals(inputField, "23456");
         driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).sendKeys(Keys.ARROW_UP);
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).getAttribute("value"),"23457");
+        softAssert.assertEquals(driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).getAttribute("value"), "23457");
         driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).sendKeys(Keys.ARROW_DOWN);
-        Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).getAttribute("value"),"23456");
+        softAssert.assertEquals(driver.findElement(By.xpath("//*[@id=\"content\"]/div/div/div/input")).getAttribute("value"), "23456");
+        softAssert.assertAll();
     }
 
-    @AfterMethod (alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
         driver.quit();
     }

@@ -7,12 +7,13 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
 import java.time.Duration;
 
 public class CheckboxesTest {
 
     WebDriver driver;
-
 
     @BeforeMethod
     public void setup() {
@@ -21,29 +22,30 @@ public class CheckboxesTest {
 //        options.addArguments("headless");
 //        options.addArguments("incognito");
 //        options.addArguments("disable-notification");
-        driver =  new ChromeDriver(options);
+        driver = new ChromeDriver(options);
 //        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @Test
     public void checkCheckboxes() {
+        SoftAssert softAssert = new SoftAssert();
         driver.get("http://the-internet.herokuapp.com/checkboxes");
         boolean checkboxOne = driver.findElement(By.cssSelector("#checkboxes > input[type=checkbox]:nth-child(1)")).isSelected();
-        Assert.assertFalse(checkboxOne);
+        softAssert.assertFalse(checkboxOne);
         driver.findElement(By.cssSelector("#checkboxes > input[type=checkbox]:nth-child(1)")).click();
         boolean checkboxOneAfterClick = driver.findElement(By.cssSelector("#checkboxes > input[type=checkbox]:nth-child(1)")).isSelected();
-        Assert.assertTrue(checkboxOneAfterClick);
+        softAssert.assertTrue(checkboxOneAfterClick);
 
         boolean checkboxTwo = driver.findElement(By.cssSelector("#checkboxes > input[type=checkbox]:nth-child(3)")).isSelected();
-        Assert.assertTrue(checkboxTwo);
+        softAssert.assertTrue(checkboxTwo);
         driver.findElement(By.cssSelector("#checkboxes > input[type=checkbox]:nth-child(3)")).click();
         boolean checkboxTwoAfterClick = driver.findElement(By.cssSelector("#checkboxes > input[type=checkbox]:nth-child(3)")).isSelected();
-        Assert.assertFalse(checkboxTwoAfterClick);
+        softAssert.assertFalse(checkboxTwoAfterClick);
+        softAssert.assertAll();
     }
 
-    @AfterMethod (alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
         driver.quit();
     }
-
 }
